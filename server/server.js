@@ -6,7 +6,7 @@ dotenv.config({ path: "../.env" });
 
 const { PORT, DATABASE_URL } = process.env;
 
-const client = new pg.Client({
+const client = new pg.Pool({
   connectionString: DATABASE_URL,
 });
 
@@ -29,13 +29,13 @@ app.get("/api/shoedata/:id", (req, res) => {
   });
 });
 
-app.get("/api/shoedata/:id", (req, res) => {
-  let id = req.params.id;
+// app.get("/api/shoedata/:id", (req, res) => {
+//   let id = req.params.id;
 
-  client.query("SELECT * FROM shoedata WHERE id = $1;", [id]).then((result) => {
-    res.send(result.rows[0]);
-  });
-});
+//   client.query("SELECT * FROM shoedata WHERE id = $1;", [id]).then((result) => {
+//     res.send(result.rows[0]);
+//   });
+// });
 
 app.listen(PORT, () => {
   console.log(`Listening on port ${PORT}`);
