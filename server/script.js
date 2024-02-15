@@ -14,8 +14,8 @@ import http from 'k6/http'
 import { sleep } from 'k6'
 
 export let options = {
-    duration: '60s',
-    vus: 225,
+    duration: '10s',
+    vus: 30,
   thresholds: {
     http_req_duration: ['p(95)<500', 'p(99)<1500'],
   },

@@ -37,11 +37,19 @@ app.get("/api/shoedata", async (req, res) => {
 });
 
 
-app.get("/api/shoedata/:id", (req, res) => { 
+app.get("/api/shoedata/:id", async (req, res) => { 
   const {id} = req.params;
-  client.query("SELECT * FROM shoedata WHERE id = $1;", [id]).then((result) => {
+  const result = await jsonCache.get(`${id}`)
+  if(result === undefined){
+    client.query("SELECT * FROM shoedata WHERE id = $1;", [id]).then(async (result) => {
+    await jsonCache.set(`${id}`, result.rows[0])
     res.send(result.rows[0]);
   });
+  } else{
+    console.log(result)
+    res.send(result)
+  }
+  
 });
 
 // app.get("/api/shoedata/:id", (req, res) => {
