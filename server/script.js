@@ -24,7 +24,7 @@ export let options = {
 export default function () {
   const BASE_URL = 'https://nighkey-jo77.onrender.com'
 
-  http.get(`${BASE_URL}/api/shoedata`)
+  // http.get(`${BASE_URL}/api/shoedata`)
   http.get(`${BASE_URL}/api/shoedata/1`)
 
   sleep(0.3)

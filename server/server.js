@@ -1,7 +1,7 @@
 import express from "express";
 import pg from "pg";
 import dotenv from "dotenv";
-import Redis from "ioredis";
+import Redis from "redis";
 import JSONCache from 'redis-json';
 
 dotenv.config({ path: "../.env" });
@@ -21,44 +21,42 @@ const app = express();
 
 app.use(express.json());
 
+// let t=performance.now()
 app.get("/api/shoedata", async (req, res) => {
-  const result = await jsonCache.get("shoes")
-  if(result === undefined){
+  // const result = await jsonCache.get("shoes")
+  // if(result === undefined){
     // console.log(result);
-    client.query("SELECT id, thumbnails, expandedimg FROM shoedata;").then(async (result) => {
-    await jsonCache.set("shoes", result.rows)
+    client.query("SELECT id, thumbnails, expandedimg FROM shoedata;").then( (result) => {
+    // await jsonCache.set("shoes", result.rows)
     res.send(result.rows);
   });
-  } else {
+  // } else {
     // console.log(result);
-    res.send(result)
-  }
+    // res.send(result)
+  // }
   
 });
+// let t1 = performance.now()
+// console.log(`task took ${t1-t} milliseconds`)
 
 
-app.get("/api/shoedata/:id", async (req, res) => { 
+app.get("/api/shoedata/:id", (req, res) => { 
+  // let t2 = performance.now()
   const {id} = req.params;
-  const result = await jsonCache.get(`${id}`)
-  if(result === undefined){
-    client.query("SELECT * FROM shoedata WHERE id = $1;", [id]).then(async (result) => {
-    await jsonCache.set(`${id}`, result.rows[0])
+  // const result =  await dbRedis.get(`shoe${id}`)
+  // if(result === null){
+    client.query("SELECT * FROM shoedata WHERE id = $1;", [id]).then((result) => {
+    // dbRedis.set(`shoe${id}`, JSON.stringify(result.rows[0]))
     res.send(result.rows[0]);
   });
-  } else{
-    console.log(result)
-    res.send(result)
-  }
-  
+  // } else{
+    // console.log(result)
+    // res.send(result)
+  // }
+//   let t3 = performance.now()
+// console.log(`task took ${t3-t2} milliseconds`)
 });
 
-// app.get("/api/shoedata/:id", (req, res) => {
-//   let id = req.params.id;
-
-//   client.query("SELECT * FROM shoedata WHERE id = $1;", [id]).then((result) => {
-//     res.send(result.rows[0]);
-//   });
-// });
 
 app.listen(PORT, () => {
   console.log(`Listening on port ${PORT}`);
